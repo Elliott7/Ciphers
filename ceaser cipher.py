@@ -39,7 +39,7 @@ def unhide_message(message, shift_amount=5):
     text = ''
     reverse_cypher = get_reverse_dict(get_encrypted_dict(alpha_string, shift_amount))
     reverse_base_dict = get_reverse_dict(alph_dict)
-    for x in message:
+    for x in message.lower():
         key = reverse_cypher[x]
         text = text + reverse_base_dict[key]
 

@@ -13,7 +13,7 @@ for number, letter in enumerate(alpha_string):
 
 
 # Returns a dictionary that has the alphabet numbers shifted according to how many places you specify
-def get_shifted_dict(input_string, num_letters_shifted):
+def get_encrypted_dict(input_string, num_letters_shifted):
     new_string = input_string[num_letters_shifted:] + input_string[:num_letters_shifted]
     shifted_dict = {}
     for num, let in enumerate(new_string):
@@ -22,19 +22,13 @@ def get_shifted_dict(input_string, num_letters_shifted):
     return shifted_dict
 
 
-# Reverses the above dictionary for translation back into readable English
-def get_reverse_dict(input_string, num_letters_shifted):
-
-    new_string = input_string[num_letters_shifted:] + input_string[:num_letters_shifted]
-    shifted_dict = {}
-    for let, num in enumerate(new_string):
-        shifted_dict[num] = let
-    return shifted_dict
+def get_reverse_dict(input_dict):
+    return dict([(value, key) for key, value in input_dict.items()])
 
 
 def hide_message(message, shift_amount=5):
     text = ''
-    new_cypher = get_shifted_dict(alpha_string, shift_amount)
+    new_cypher = get_encrypted_dict(alpha_string, shift_amount)
     for x in message.lower():
         text = text + new_cypher[alph_dict[x]]
 
@@ -43,22 +37,21 @@ def hide_message(message, shift_amount=5):
 
 def unhide_message(message, shift_amount=5):
     text = ''
-    reverse_cypher = get_reverse_dict(alpha_string, shift_amount)
-    alpha_values = list(alph_dict.values())
-    alpha_keys = list(alph_dict.keys())
+    reverse_cypher = get_reverse_dict(get_encrypted_dict(alpha_string, shift_amount))
+    reverse_base_dict = get_reverse_dict(alph_dict)
     for x in message:
         key = reverse_cypher[x]
-        text = text + alpha_keys[alpha_values.index(key)]
+        text = text + reverse_base_dict[key]
 
     return text
 
 
-secret_message = "this is a test"
-print(secret_message)
+if __name__ == "__main__":
+    secret_message = "this is a test"
+    print(f"The secret message is: {secret_message}")
 
-hidden = hide_message(secret_message)
-print(hidden)
+    hidden = hide_message(secret_message)
+    print(f"The encrypted message is: {hidden}")
 
-unhidden = unhide_message(hidden)
-print(unhidden)
-
+    unhidden = unhide_message(hidden)
+    print(f"The decrypted message is: {unhidden}")
